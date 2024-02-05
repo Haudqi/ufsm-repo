@@ -1,0 +1,54 @@
+{% extends "facerec/layoutbase.html" %}
+{% block title %}
+    Lista de Estudantes
+{% endblock %}
+{% block content %}
+    <h2>UFSM :: Estudantes</h2>
+    <div class="next">
+    <a href="{% url 'estudante_novo' %}" class="body">Novo Estudante</a>
+    </div>
+    {% if estudante_list %}
+    <div class="next"></div>    
+        <table class="table">
+            <thead>
+            <tr class="table-header">
+                <th class="table-header-col">Foto</th>
+                <th class="table-header-col">Id</th>
+                <th class="table-header-col">Nome</th>
+                <th class="table-header-col">Sobrenome</th>
+                <th class="table-header-col">Curso</th>
+                <th class="table-header-col">Semestre</th>
+                <th colspan="2">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+                {%for estudante in estudante_list %}
+                <tr class="table-row">
+                    {% if estudante.foto %}
+                    <td class="table-data-image">
+                        <a href="{% url 'upload_imagem' estudante.registro %}">
+                            <img class="thumbs" src="{{ estudante.foto.url }}" />
+                        </a>
+                    </td>
+                    {% else %}
+                    <td class="table-data-image">
+                        <a href="{% url 'upload_imagem' estudante.registro %}">
+                            <img class="thumbs" src="/media/user_0/avatar.png"/>
+                        </a>
+                    </td>                        
+                    {% endif %}
+                    <td class="table-data">{{ estudante.registro }}</td>
+                    <td class="table-data">{{ estudante.nome }}</td>
+                    <td class="table-data">{{ estudante.sobrenome }}</td>
+                    <td class="table-data">{{ estudante.curso }}</td>
+                    <td class="table-data">{{ estudante.semestre_atual }}</td>
+                    <td class="table-data-action"><a href="{% url 'estudante_editar' estudante.registro %}" class="body">editar</a>&nbsp;&nbsp;<a href="{% url 'estudante_deletar' estudante.registro %}" class="body">apagar</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Não há estudantes cadastrados!</p>
+    {% endif %}
+    </div>
+{% endblock %}

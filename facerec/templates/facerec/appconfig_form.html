@@ -1,0 +1,28 @@
+{% extends "facerec/layoutbase.html" %}
+{% block title %}
+UFSM :: Facerec
+{% endblock %}
+{% block content %}
+<h1>Configuração Facerec</h1>
+<div class="next">
+<form method="POST">{% csrf_token %}
+    <table>
+        <tr>
+            <td>Domínio Engine </td>
+            <td>{{ form.domain }}</td>
+        </tr>
+        <tr>
+            <td>Porta</td>
+            <td>{{ form.port }}</td>
+        </tr>
+        <tr>
+            <td>API-Key</td>
+            <td>{{ form.api_key }}</td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Salvar"></td>
+        </tr>
+    </table>
+</form>
+</div>
+{% endblock %}

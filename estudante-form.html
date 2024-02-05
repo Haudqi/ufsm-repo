@@ -1,0 +1,42 @@
+{% extends "facerec/layoutbase.html" %}
+{% block title %}
+UFSM :: Estudante
+{% endblock %}
+{% block content %}
+<h1>Estudante</h1>
+<form method="POST">{% csrf_token %}
+    {{ form.as_p }} 
+    <table>
+        <tr>
+            <td>Registro Unico </td>
+            <td>{{ form.registro }}</td>
+        </tr>
+        <tr>
+            <td>Nome</td>
+            <td>{{ form.nome }}</td>
+        </tr>
+        <tr>
+            <td>Sobrenome</td>
+            <td>{{ form.sobrenome }}</td>
+        </tr>
+        <tr>
+            <td>Curso</td>
+            <td>{{ form.curso }}</td>
+        </tr>
+        <tr>
+            <td>Semestre atual</td>
+            <td>
+                <select name="semestre_atual">
+                    {% for s in '0123456789'|make_list %}
+                    <option value="{{semestre_atual}}">{{s}}</option>
+                    {% endfor %}
+
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Save"></td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

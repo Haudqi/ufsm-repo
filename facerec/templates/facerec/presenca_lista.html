@@ -1,0 +1,35 @@
+{% extends "facerec/layoutbase.html" %}
+{% block title %}
+    Lista de Presenças registradas
+{% endblock %}
+{% block content %}
+    <h2>UFSM :: Estudantes</h2>
+    {% if presenca_list %}
+    <div class="next"></div>    
+        <table class="table">
+            <thead>
+            <tr class="table-header">
+                <th class="table-header-col">Registro</th>
+                <th class="table-header-col">Nome Completo</th>
+                <th class="table-header-col">Data/Hora</th>
+                <th class="table-header-col">IP</th>
+                <th class="table-header-col">Similaridade</th>
+            </tr>
+            </thead>
+            <tbody>
+                {%for presenca in presenca_list %}
+                <tr class="table-row">
+                    <td class="table-data">{{ presenca.registro }}</td>
+                    <td class="table-data">{{ presenca.nome_completo }}</td>
+                    <td class="table-data">{{ presenca.data_hora |date:"d/m/Y - G:i:s"  }}</td>
+                    <td class="table-data">{{ presenca.ip  }}</td>
+                    <td class="table-data">{{ presenca.similaridade |floatformat:2}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Não há presenças registradas!</p>
+    {% endif %}
+    </div>
+{% endblock %}

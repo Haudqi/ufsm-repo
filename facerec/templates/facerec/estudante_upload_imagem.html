@@ -1,0 +1,13 @@
+{% extends "facerec/layoutbase.html" %}
+{% block title %}
+UFSM :: Facerec
+{% endblock %}
+{% block content %}
+<h1>Upload uma foto</h1>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name="foto">
+  <button type="submit">Upload</button>
+</form>
+{% endblock %}

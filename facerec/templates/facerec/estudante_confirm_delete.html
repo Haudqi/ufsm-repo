@@ -1,0 +1,11 @@
+{% extends "facerec/layoutbase.html" %}
+{% block title %}
+UFSM :: Facerec
+{% endblock %}
+{% block content %}
+<h1>Exclusão do estudante</h1>
+<form method="post">{% csrf_token %}
+    Tem certeza que quer apagar o estudante "{{ object }}" ?
+    <input type="submit" value="Enviar" />
+</form>
+{% endblock %}

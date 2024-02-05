@@ -1,0 +1,181 @@
+{% extends "facerec/layoutbase.html" %}
+{% block title %}
+UFSM :: Facerec
+{% endblock %}
+{% block content %}
+
+<script type="text/javascript">
+    var ultimo_registro;
+    var video_aberto = false;
+
+    $( document ).ready(toogle_video_frame);
+
+    function toogle_video_frame() {
+        if (video_aberto) {
+            $('#video_frame').show();
+        } else {
+            $('#video_frame').hide();
+        }    
+    }
+    
+    function video() {
+        video_aberto = true;
+        toogle_video_frame();
+
+        let video = document.getElementById("live");
+        let canvas = document.getElementById("canvas");
+        let canvas2 = document.getElementById("canvas2");
+        let ctx = canvas.getContext('2d');
+        let ctx2 = canvas2.getContext('2d');
+
+        let apiKey = "981e2935-72ee-4505-b8e4-61b01de3662d"
+
+        navigator.mediaDevices.getUserMedia({
+            video: {width: 640, height: 480}
+        }).then(function (stream) {
+            video.srcObject = stream;
+
+            document.addEventListener("next_frame", draw);
+
+            const evt = new Event("next_frame", {"bubbles": true, "cancelable": false});
+            document.dispatchEvent(evt);
+        });
+
+        async function registrarPresenca(subject, similarity) {
+            const formData = new FormData ();
+
+            formData.append("individuo", subject);
+            formData.append("similaridade", similarity);
+
+            try {
+                const response = await fetch("http://localhost:8000/api/registrar", {
+                             method: "POST",
+                             body: formData
+                         });
+                const text = await response.text();         
+                console.log(text);
+                displayRequestResponse(formData, text) ;                        
+            } catch (e) {
+                    console.error(e);
+            }    
+        }
+        
+        function displayRequestResponse (req, resp) {
+            console.log (req, resp);
+            if (req) {
+                let data = {};
+
+                for (let [key, prop] of req) {
+                    data[key] = prop;
+                }
+
+                data = JSON.stringify(data, null, 2);                
+                $("#request_text").text(data);    
+            }  
+            if (resp) {
+                $("#response_text").text(resp);    
+            }  
+        }
+        
+        function draw() {
+            ctx.drawImage(video, 0, 0, 640, 480);
+            canvas.toBlob(function (blob) {
+                blob.name = "blob.jpeg"
+                let fd = new FormData();
+                fd.append('file', blob, "blob.jpeg");
+                fetch('http://192.168.0.184:8000/api/v1/recognition/recognize',
+                    {
+                        method: "POST",
+                        headers: {
+                            "x-api-key": apiKey
+                        },
+                        body: fd
+                    }
+                ).then(r => r.json()).then(
+                    function (data) {
+                        const evt = new Event("next_frame", {"bubbles": true, "cancelable": false});
+                        document.dispatchEvent(evt);
+                        ctx2.clearRect(0, 0, 640, 480);
+                        ctx2.drawImage(video, 0, 0, 640, 480);
+                        if (!data.result) {
+                            return;
+                        }
+                        let box = data.result[0].box;
+                        let individuo = data.result[0].subjects[0].subject;
+                        let similaridade = data.result[0].subjects[0].similarity
+                        // let age = data.result[0].age;
+                        // let gender = data.result[0].gender;
+                        ctx2.lineWidth = 3;
+                        ctx2.strokeStyle = 'white';
+                        ctx2.strokeRect(box.x_min, box.y_min, box.x_max - box.x_min, box.y_max - box.y_min);
+                        ctx2.fillStyle = 'green';
+                        ctx2.font = '14px arial';
+                        ctx2.fillText('Nome:'.concat(individuo), box.x_min, box.y_min - 40);
+                        ctx2.fillText('Similaridade:'.concat(similaridade), box.x_min, box.y_min - 20);
+                        if ( (individuo != ultimo_registro) && (similaridade > 0.8) ) {
+                            registrarPresenca (individuo, similaridade);
+                            ultimo_registro = individuo
+                        }    
+                    });
+            }, 'image/jpeg', 0.95);
+        }
+
+    }
+</script>
+
+<div class="next">
+    <table>
+        <tr>
+            <td>
+                <form action="{% url 'treinamento' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name='treinamento' value='treinamento_modelo'>Treinar Modelo</button>
+                </form>
+            </td>
+            <td>
+                <button onclick="video()">Marcar Presença</button>    
+            </td>    
+            <td>
+                <form action="{% url 'presenca_lista' %}">
+                    {% csrf_token %}
+                    <button type="submit" name='presenca_lista' value='presenca_lista'>Listar Presenças</button>
+                </form>
+            </td>    
+        </tr>
+    </table>
+    </div>
+</div>
+<div class="next">
+    Máquina treinada: {{ estado }}
+</div>
+<div class="next">
+    Quantidade de indivíduos: {{ quantidade }}
+</div>
+<div class="next" id="video_frame">
+    <table>
+        <tr>
+            <td rowspan="2">
+                <video id="live" width="640" height="480" autoplay style="display:none;"></video>
+                <canvas width="640" id="canvas" height="480" style="display:none;"></canvas>
+                <canvas width="640" id="canvas2" height="480"></canvas>
+            </td>
+            <td>
+                <label class="label" for="request_text">Requisição</label>
+                <textarea class="textarea" id="request_text" name="request" rows="10" cols="50" readonly>
+A presença será registrada assim que uma face for reconhecida. Aguardando um rosto conhecido aparecer .. 
+                </textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="label" for="response_text">Resposta</label>
+                <textarea class="textarea" id="response_text" name="response" rows="10" cols="50" readonly>
+Nenhuma presença ainda foi registrada!
+                </textarea>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+{% endblock %}
