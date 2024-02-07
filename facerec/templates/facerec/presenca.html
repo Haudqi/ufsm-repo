@@ -48,9 +48,10 @@ UFSM :: Facerec
             formData.append("similaridade", similarity);
 
             try {
-                const response = await fetch("http://localhost:8000/api/registrar", {
+                const response = await fetch("http://localhost:7777/api/registrar", {
                              method: "POST",
-                             body: formData
+                             body: formData,
+
                          });
                 const text = await response.text();         
                 console.log(text);

@@ -8,11 +8,23 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js" 
             integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" 
             crossorigin="anonymous">
-    </script>    
+    </script>
+
+    <style>
+        footer {
+            text-align: center;
+        }
+        footer img {
+            margin: 10px;
+        }
+    </style>
+
+
 </head>
 
 <body>
 <div class="navbar">
+    <img src="{% static 'Redeslogo.png' %}" alt="Redes" width="75" height="75" class="header-image">
     <a href="{% url 'home' %}" class="navbar-item">Home</a>
     <a href="{% url 'estudante_lista' %}" class="navbar-item">Estudantes</a>
     <a href="{% url 'presenca' %}" class="navbar-item">Presença</a>
@@ -20,12 +32,14 @@
     <a href="{% url 'sobre' %}" class="navbar-item">Sobre</a>
 </div>
 
+
 <div class="body-content">
     {% block content %}
     {% endblock %}
     <hr/>
     <footer>
         <p>&copy; UFSM: Sistema de marcação de presença via reconhecimento facial : 2024</p>
+        <img src="{% static 'UFSM.png' %}" alt="UFSM" width="100" height="100" class="header-image">
     </footer>
 </div>
 </body>

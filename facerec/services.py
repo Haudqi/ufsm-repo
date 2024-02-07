@@ -19,7 +19,7 @@ class MaquinaAprendizado:
 
     def __init__(self) -> None:
         if (self.config is None):
-            raise Exception ('Configuração do framewok de reconhecimento não realizada')
+            raise Exception ('Configuração do framework de reconhecimento não realizada')
     
         domain = self.config.get_domain()
         port = self.config.get_port()
@@ -39,7 +39,7 @@ class MaquinaAprendizado:
     
 class ReconhecimentoFace:
     maquina_aprendizado: MaquinaAprendizado
-    FOTO_PATH = "http://localhost:8000"
+    FOTO_PATH = "http://localhost:7777"
 
     def __init__(self, maquina_aprendizado: MaquinaAprendizado) -> None:
         self.maquina_aprendizado = maquina_aprendizado

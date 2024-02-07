@@ -3,7 +3,7 @@
 UFSM :: Facerec
 {% endblock %}
 {% block content %}
-<h1>Upload uma foto</h1>
+<h1>Upload de uma foto para estudante {{ object.nome }}</h1>
 
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}

@@ -4,12 +4,18 @@
 {% endblock %}
 {% block content %}
     <h2>UFSM :: Estudantes</h2>
+
+    <form action="{% url 'limpar_presencas' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" name="limpar" value="Limpar">Limpar Lista de Presenças</button>
+    </form>
+
     {% if presenca_list %}
     <div class="next"></div>    
         <table class="table">
             <thead>
             <tr class="table-header">
-                <th class="table-header-col">Registro</th>
+                <th class="table-header-col">Matrícula</th>
                 <th class="table-header-col">Nome Completo</th>
                 <th class="table-header-col">Data/Hora</th>
                 <th class="table-header-col">IP</th>

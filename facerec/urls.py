@@ -1,6 +1,9 @@
 from django.urls import path
 from facerec import views
 
+from .views import LimparPresencasView
+
+
 urlpatterns = [
     path("",views.home, name="home"),
     path("sobre/",views.sobre, name="sobre"),
@@ -12,6 +15,7 @@ urlpatterns = [
     #path("estudantes/",views.estudantes, name="estudantes"),
     path("presenca/",views.presenca, name="presenca"),
     path("presencas/",views.PresencaLista.as_view(template_name="facerec/presenca_lista.html"), name="presenca_lista"),
+    path('limpar_presencas/', LimparPresencasView.as_view(), name='limpar_presencas'),
     path("treinamento/",views.treinamento, name="treinamento"),
     path("estudantes/upload/<int:pk>", views.EstudanteFotoEditar.as_view(template_name="facerec/estudante_upload_imagem.html"), name="upload_imagem"),
     path("config/",views.config, name="config"),

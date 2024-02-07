@@ -147,3 +147,14 @@ class EstudanteFotoEditar(UpdateView):
 
 class PresencaLista(ListView):
     model = Presenca
+
+class LimparPresencasView(ListView):
+    template_name = 'facerec/presenca_lista.html'
+
+    def post(self, request, *args, **kwargs):
+        # Lógica para limpar a lista de presenças
+        Presenca.objects.all().delete()
+        return redirect('presenca_lista')
+
+    def get(self, request, *args, **kwargs):
+        return redirect('presenca_lista')

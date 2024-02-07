@@ -70,7 +70,7 @@ class Presenca(models.Model):
     nome_completo = models.CharField(max_length=200, null=False)
     similaridade = models.FloatField(null=False, default=0.0)
     ip = models.GenericIPAddressField(null=False)
-    data_hora = models.DateTimeField(default=django.utils.timezone.now, null=False)
+    data_hora = models.DateTimeField(default=django.utils.timezone.now(), null=False)
 
     def __str__(self):
         return str(self.registro).concat(" - ").concat(self.nome).concat(" - ").concat(self.sobrenome)
